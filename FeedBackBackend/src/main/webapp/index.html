@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="jquery-3.1.1.js"></script>
+<script src="jquery.serialize-object.js"></script>
+<script>
+
+
+function login(){
+	event.preventDefault();
+    localStorage.clear();
+	var data = $("#loginform").serializeJSON();
+	var authHeader = "Bearer " + localStorage.getItem("jwt");
+	$.ajax({
+		url:'rest/login',
+		method : 'POST',
+		headers : {"Authorization": authHeader },
+		contentType : 'application/json',
+		data: data,
+		success: function(data, txt, jqXHR){
+			var auth = jqXHR.getResponseHeader("Authorization");
+			auth = auth.split(" ")[1];
+			localStorage.setItem("jwt",auth);
+			console.log(localStorage.getItem("jwt"));
+			$('#main').load('main.html');
+		}
+	});
+}
+</script>
+</head>
+<body id="main"><form id="loginform">
+User: <input type="text" name="username" value="test">
+Pass: <input type="text" name="password" value="test">
+<button onclick="login();">submit</button>
+</form>
+
+</body>
+</html>

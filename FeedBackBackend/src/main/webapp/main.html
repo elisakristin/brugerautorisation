@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="jquery-3.1.1.js"></script>
+<script src="jquery.serialize-object.js"></script>
+<script>
+</script>
+</head>
+<body>
+Du er nu logget ind!<BR>
+Din token er:
+<div id="tokenholder"></div>
+Din token udløber efter 10 sekunder.
+<script>
+$(document).ready(function(){
+	$("#tokenholder").html(localStorage.getItem('jwt'));
+	
+})
+function testToken(){
+	var token = localStorage.getItem('jwt');
+	$.ajax({
+		url: "rest/login/validate",
+		method: 'POST',
+		data: token,
+		success: function(data){
+			alert(data);
+		},
+		error: function(data){
+			alert(data.statusText);
+			logOut()
+		}
+	})
+}
+function logOut(){
+	localStorage.removeItem('jwt');
+	$('#main').load("index.html.html");
+	
+}
+</script>
+<div>
+<button onclick="testToken();">Test token</button>
+<button onclick="logOut();">LogOut</button>
+</div>
+</body>
+</html>
